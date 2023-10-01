@@ -6,6 +6,13 @@ const form = document.querySelector('#search-form');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.js-load-more');
 
+const paramsForNotify = {
+  position: 'center-center',
+  timeout: 3000,
+  width: '350px',
+  fontSize: '22px',
+};
+
 form.addEventListener('submit', onFormSearch);
 let page = null;
 let value = '';
@@ -20,7 +27,7 @@ function onFormSearch(event) {
     .toLowerCase();
 
   if (value === '') {
-    Notify.info('Enter your request, please!');
+    Notify.info('Enter your request, please!', paramsForNotify);
     return;
   }
   createApiRequest(value);
@@ -48,7 +55,8 @@ function renderMarkup(apiResponse) {
 
   if (!total) {
     Notify.info(
-      'Sorry, there are no images matching your search query. Please try again.'
+      'Sorry, there are no images matching your search query. Please try again.',
+      paramsForNotify
     );
     return;
   } else if (maxPage === page) {
@@ -71,7 +79,10 @@ async function onLoadMore() {
     const markupPage = createMarkup(hits);
     gallery.insertAdjacentHTML('beforeend', markupPage);
     if (hits.length < 40) {
-      Notify.info("We're sorry, but you've reached the end of search results.");
+      Notify.info(
+        "We're sorry, but you've reached the end of search results.",
+        paramsForNotify
+      );
       loadMoreBtn.classList.replace('load-more', 'load-more-hidden');
       loadMoreBtn.removeEventListener('click', onLoadMore);
     }
